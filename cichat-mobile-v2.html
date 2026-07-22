@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+<title>CICHAT Mobile</title>
+
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CICHAT">
+<meta name="theme-color" content="#231A5C">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23342E9E'/%3E%3Cstop offset='1' stop-color='%230FA36B'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Ctext x='50' y='64' font-size='42' font-family='Arial' font-weight='700' fill='%23fff' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+
+<style>
+  :root{
+    --navy-1:#231A5C;
+    --navy-2:#150F3D;
+    --indigo:#4C3FE0;
+    --teal:#0FA8A0;
+    --bg:#F1F0FA;
+    --card:#FFFFFF;
+    --border:#E5E2F3;
+    --text:#1B2036;
+    --muted:#6E6C87;
+    --bubble-own:#4C3FE0;
+    --bubble-other:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    background:var(--bg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--text);
+    display:flex;
+    justify-content:center;
+    -webkit-tap-highlight-color:transparent;
+    overflow:hidden;
+  }
+  .app{
+    width:100%;
+    max-width:460px;
+    height:100vh;
+    height:100dvh;
+    background:var(--bg);
+    display:flex;
+    flex-direction:column;
+    position:relative;
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    background:linear-gradient(135deg,var(--indigo) 0%,var(--navy-1) 55%,var(--navy-2) 100%);
+    color:#fff;
+    padding:calc(18px + env(safe-area-inset-top,0px)) 16px 16px;
+    box-shadow:0 8px 20px rgba(35,26,92,.28);
+    flex-shrink:0;
+    position:relative;
+    overflow:hidden;
+    z-index:2;
+  }
+  header::before{
+    content:"";
+    position:absolute; top:-50px; right:-30px;
+    width:150px; height:150px; border-radius:50%;
+    background:radial-gradient(circle,rgba(15,168,160,.35),transparent 70%);
+  }
+  header .eyebrow{
+    font-size:9.5px; letter-spacing:.14em; text-transform:uppercase;
+    opacity:.6; margin:0 0 4px; position:relative;
+  }
+  .headerRow{ display:flex; align-items:center; gap:10px; position:relative; }
+  .headerRow h1{ margin:0; font-size:19px; font-weight:700; flex:1; }
+  .iconBtn{
+    width:34px; height:34px; border-radius:10px;
+    background:rgba(255,255,255,.12);
+    border:none; color:#fff; font-size:16px;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .iconBtn:active{ background:rgba(255,255,255,.22); }
+  .backBtn{ font-size:20px; }
+
+  /* ---------- SCREEN: NAMA ---------- */
+  #screenName{
+    flex:1; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    padding:32px 28px; text-align:center;
+  }
+  #screenName .badge{
+    width:56px; height:56px; border-radius:16px;
+    background:linear-gradient(135deg,var(--indigo),var(--teal));
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:24px; font-weight:800;
+    margin-bottom:18px;
+    box-shadow:0 8px 18px rgba(76,63,224,.3);
+  }
+  #screenName h2{ margin:0 0 6px; font-size:18px; }
+  #screenName p{ margin:0 0 22px; font-size:13px; color:var(--muted); line-height:1.5; }
+  #screenName input{
+    width:100%; padding:13px 14px; font-size:16px;
+    border:1.5px solid #D8D5EC; border-radius:12px;
+    background:#fff; color:var(--text); font-family:inherit;
+    text-align:center; margin-bottom:14px;
+  }
+  #screenName input:focus{ outline:none; border-color:var(--indigo); }
+  #screenName button{
+    width:100%; padding:14px; font-size:14.5px; font-weight:700;
+    border-radius:12px; border:none; color:#fff; font-family:inherit;
+    background:linear-gradient(135deg,var(--indigo),var(--teal));
+    box-shadow:0 4px 12px rgba(76,63,224,.3);
+  }
+  #screenName button:active{ transform:scale(.98); }
+
+  /* ---------- SCREEN: DAFTAR ROOM ---------- */
+  #screenList{ flex:1; overflow-y:auto; padding:12px 12px 90px; }
+  .roomCard{
+    background:var(--card); border:1px solid var(--border);
+    border-radius:14px; padding:13px 14px; margin-bottom:9px;
+    display:flex; align-items:center; gap:12px;
+    box-shadow:0 2px 6px rgba(35,26,92,.05);
+  }
+  .roomCard:active{ background:#F7F6FD; }
+  .roomAvatar{
+    width:42px; height:42px; border-radius:12px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-weight:700; font-size:15px;
+  }
+  .roomAvatar.grup{ background:linear-gradient(135deg,var(--indigo),var(--teal)); }
+  .roomAvatar.priv{ background:linear-gradient(135deg,#6A5FE8,#8B7EF5); }
+  .roomInfo{ flex:1; min-width:0; }
+  .roomInfo .rname{ font-size:14.5px; font-weight:700; margin-bottom:2px; }
+  .roomInfo .rlast{
+    font-size:12px; color:var(--muted);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .roomTime{ font-size:10.5px; color:var(--muted); flex-shrink:0; }
+
+  .sectionLabel{
+    font-size:11px; font-weight:700; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--muted);
+    margin:16px 6px 8px;
+  }
+  .sectionLabel:first-child{ margin-top:4px; }
+
+  #btnAddContact{
+    width:100%; padding:13px; margin-top:6px;
+    background:#fff; border:1.5px dashed #C9C5E8; border-radius:14px;
+    color:var(--indigo); font-weight:700; font-size:13.5px; font-family:inherit;
+  }
+  #btnAddContact:active{ background:#F1F0FA; }
+
+  .emptyHint{
+    text-align:center; color:var(--muted); font-size:12.5px;
+    padding:20px 10px; line-height:1.6;
+  }
+
+  /* ---------- SCREEN: CICHAT ---------- */
+  #screenChat{ flex:1; display:none; flex-direction:column; min-height:0; }
+  #chatMessages{
+    flex:1; overflow-y:auto; padding:14px 12px;
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .bubbleRow{ display:flex; }
+  .bubbleRow.own{ justify-content:flex-end; }
+  .bubbleRow.other{ justify-content:flex-start; }
+  .bubble{
+    max-width:76%; padding:9px 12px; border-radius:14px;
+    font-size:14px; line-height:1.4; word-wrap:break-word;
+  }
+  .bubbleRow.own .bubble{
+    background:var(--bubble-own); color:#fff; border-bottom-right-radius:4px;
+  }
+  .bubbleRow.other .bubble{
+    background:var(--bubble-other); color:var(--text);
+    border:1px solid var(--border); border-bottom-left-radius:4px;
+  }
+  .bubble .bsender{
+    font-size:10.5px; font-weight:700; opacity:.7; margin-bottom:2px;
+  }
+  .bubble .btime{
+    font-size:9.5px; opacity:.6; margin-top:3px; text-align:right;
+  }
+
+  #chatInputBar{
+    display:flex; gap:8px; align-items:flex-end;
+    padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));
+    background:var(--card); border-top:1px solid var(--border);
+    flex-shrink:0;
+  }
+  #txtChatMsg{
+    flex:1; resize:none; max-height:90px;
+    padding:11px 13px; font-size:15px; font-family:inherit;
+    border:1.5px solid #D8D5EC; border-radius:14px;
+    background:#FBFBFE; color:var(--text);
+  }
+  #txtChatMsg:focus{ outline:none; border-color:var(--indigo); }
+  #btnSendChat{
+    width:44px; height:44px; border-radius:12px; border:none;
+    background:linear-gradient(135deg,var(--indigo),var(--teal));
+    color:#fff; font-size:17px; flex-shrink:0;
+  }
+  #btnSendChat:active{ transform:scale(.95); }
+
+  #connDot{
+    width:8px; height:8px; border-radius:50%; flex-shrink:0;
+    background:#E0A72F;
+  }
+  #connDot.on{ background:#0FA36B; }
+  #connDot.off{ background:#D9534F; }
+
+  /* ---------- MODAL CUSTOM (pengganti prompt/alert bawaan browser,
+     yang sering diblokir di in-app browser / mode standalone iOS) ---------- */
+  #modalOverlay{
+    display:none;
+    position:fixed; inset:0; z-index:50;
+    background:rgba(21,15,61,.45);
+    align-items:flex-end;
+    justify-content:center;
+  }
+  #modalOverlay.show{ display:flex; }
+  #modalBox{
+    width:100%; max-width:460px;
+    background:#fff;
+    border-radius:18px 18px 0 0;
+    padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));
+    box-shadow:0 -8px 24px rgba(35,26,92,.2);
+  }
+  #modalBox h3{ margin:0 0 6px; font-size:15.5px; }
+  #modalBox p{ margin:0 0 14px; font-size:12.5px; color:var(--muted); line-height:1.5; }
+  #modalInput{
+    width:100%; padding:12px 13px; font-size:16px;
+    border:1.5px solid #D8D5EC; border-radius:12px;
+    background:#FBFBFE; color:var(--text); font-family:inherit;
+    margin-bottom:14px;
+  }
+  #modalInput:focus{ outline:none; border-color:var(--indigo); }
+  #modalActions{ display:flex; gap:10px; }
+  #modalActions button{
+    flex:1; padding:13px; font-size:14px; font-weight:700;
+    border-radius:12px; border:none; font-family:inherit;
+  }
+  #modalCancel{ background:#F1F0FA; color:var(--indigo); }
+  #modalSave{
+    background:linear-gradient(135deg,var(--indigo),var(--teal)); color:#fff;
+  }
+  #modalCancel:active,#modalSave:active{ transform:scale(.98); }
+
+  #toast{
+    position:fixed; left:50%; bottom:24px; transform:translateX(-50%);
+    background:#1B2036; color:#fff; padding:11px 18px;
+    border-radius:30px; font-size:12.5px; z-index:60;
+    display:none; box-shadow:0 6px 16px rgba(0,0,0,.25);
+    max-width:80%; text-align:center;
+  }
+  #toast.show{ display:block; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ SCREEN: SET NAMA ============ -->
+  <div id="screenName">
+    <div class="badge">C</div>
+    <h2>Masuk CICHAT</h2>
+    <p>Masukan username yang sama dengan username di PC.</p>
+    <input type="text" id="inpMyName" placeholder="your username" autocomplete="off">
+    <button id="btnSaveMyName">MASUK</button>
+  </div>
+
+  <!-- ============ SCREEN: DAFTAR ROOM ============ -->
+  <div id="screenList" style="display:none;">
+    <header>
+      <p class="eyebrow">CICHAT &middot; Developed by Akbar</p>
+      <div class="headerRow">
+        <h1 id="hdrListTitle">Chat</h1>
+        <span id="connDot"></span>
+        <button class="iconBtn" id="btnChangeName" title="Ganti nama">&#9998;</button>
+      </div>
+    </header>
+    <div style="padding:12px 12px 0;">
+      <div class="sectionLabel">Grup</div>
+      <div id="roomGrup"></div>
+      <div class="sectionLabel">Chat Pribadi</div>
+      <div id="roomList"></div>
+      <button id="btnAddContact">+ Tambah kontak</button>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN: CiCHAT ============ -->
+  <div id="screenChat">
+    <header>
+      <div class="headerRow">
+        <button class="iconBtn backBtn" id="btnBackToList">&#8592;</button>
+        <h1 id="hdrChatTitle">Chat</h1>
+        <span id="connDot2"></span>
+      </div>
+    </header>
+    <div id="chatMessages"></div>
+    <div id="chatInputBar">
+      <textarea id="txtChatMsg" rows="1" placeholder="Ketik pesan..."></textarea>
+      <button id="btnSendChat">&#10148;</button>
+    </div>
+  </div>
+
+  <!-- ============ MODAL TAMBAH KONTAK ============ -->
+  <div id="modalOverlay">
+    <div id="modalBox">
+      <h3>Tambah kontak</h3>
+      <p>Isi username (harus sama persis dengan username di PC)</p>
+      <input type="text" id="modalInput" placeholder="Nama, mis. Budi" autocomplete="off">
+      <div id="modalActions">
+        <button id="modalCancel">BATAL</button>
+        <button id="modalSave">SIMPAN</button>
+      </div>
+    </div>
+  </div>
+  <div id="toast"></div>
+
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<script>
+(function(){
+  "use strict";
+
+  // ================= KONFIGURASI FIREBASE =================
+  var firebaseConfig = {
+    apiKey: "AIzaSyAOBUP53O74byfih9_cRmZxynH1FhQdY_A",
+    authDomain: "cichat-sync.firebaseapp.com",
+    databaseURL: "https://cichat-sync-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "cichat-sync",
+    storageBucket: "cichat-sync.firebasestorage.app",
+    messagingSenderId: "705626917996",
+    appId: "1:705626917996:web:4d53b811a6d225de21dc49"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.database();
+  var messagesRef = db.ref("messages");
+
+  // ================= STATE LOKAL =================
+  var LS_NAME = "cichat_myname";
+  var LS_CONTACTS = "cichat_contacts";
+
+  var myName = localStorage.getItem(LS_NAME) || "";
+  var contacts = [];
+  try { contacts = JSON.parse(localStorage.getItem(LS_CONTACTS) || "[]"); } catch(e){ contacts = []; }
+
+  var allMessages = {};      // pushKey -> {ts,sender,recipient,msg,...}
+  var currentRoom = null;    // null = di layar daftar. "ALL" = grup. nama lain = private.
+  var knownKeys = null;      // Set of pushKey yang udah pernah diproses (null = belum load pertama)
+
+  // ================= NOTIFIKASI =================
+  var audioCtx = null;
+
+  function unlockAudio(){
+    if(audioCtx) return;
+    try{
+      var AC = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AC();
+    }catch(e){}
+  }
+  document.addEventListener("click", unlockAudio, { once:true });
+  document.addEventListener("touchstart", unlockAudio, { once:true });
+
+  function playNotifSound(){
+    if(!audioCtx) return;
+    if(audioCtx.state === "suspended"){ audioCtx.resume(); }
+    var now = audioCtx.currentTime;
+    [0, 0.12].forEach(function(delay, i){
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = i === 0 ? 880 : 1160;
+      gain.gain.setValueAtTime(0.0001, now + delay);
+      gain.gain.exponentialRampToValueAtTime(0.22, now + delay + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + delay + 0.16);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now + delay);
+      osc.stop(now + delay + 0.18);
+    });
+  }
+
+  function vibrateNotif(){
+    if(navigator.vibrate){ navigator.vibrate([70, 40, 70]); }
+  }
+
+  function notifyNewMessage(m){
+    playNotifSound();
+    vibrateNotif();
+    var roomTitle = m.recipient === "ALL" ? "Grup" : m.sender;
+    var inThatRoomAlready = (currentRoom === "ALL" && m.recipient === "ALL") ||
+                             (currentRoom === m.sender && m.recipient === myName);
+    if(!inThatRoomAlready || screenChat.style.display === "none"){
+      showToast((m.recipient === "ALL" ? "" : "Pesan baru dari ") +
+                (m.recipient === "ALL" ? m.sender + " (Grup): " : "") +
+                (m.recipient !== "ALL" ? m.sender + ": " : "") +
+                m.msg);
+    }
+  }
+
+  // ================= ELEMENT =================
+  var screenName = document.getElementById("screenName");
+  var screenList = document.getElementById("screenList");
+  var screenChat = document.getElementById("screenChat");
+
+  var inpMyName = document.getElementById("inpMyName");
+  var btnSaveMyName = document.getElementById("btnSaveMyName");
+  var btnChangeName = document.getElementById("btnChangeName");
+
+  var roomGrup = document.getElementById("roomGrup");
+  var roomList = document.getElementById("roomList");
+  var btnAddContact = document.getElementById("btnAddContact");
+
+  var hdrChatTitle = document.getElementById("hdrChatTitle");
+  var chatMessages = document.getElementById("chatMessages");
+  var txtChatMsg = document.getElementById("txtChatMsg");
+  var btnSendChat = document.getElementById("btnSendChat");
+  var btnBackToList = document.getElementById("btnBackToList");
+
+  var connDot = document.getElementById("connDot");
+  var connDot2 = document.getElementById("connDot2");
+
+  var modalOverlay = document.getElementById("modalOverlay");
+  var modalInput = document.getElementById("modalInput");
+  var modalCancel = document.getElementById("modalCancel");
+  var modalSave = document.getElementById("modalSave");
+  var toast = document.getElementById("toast");
+
+  var modalOnSave = null; // callback dipanggil pas SIMPAN ditekan
+
+  function openModal(onSave, prefill){
+    modalInput.value = prefill || "";
+    modalOnSave = onSave;
+    modalOverlay.classList.add("show");
+    setTimeout(function(){ modalInput.focus(); }, 150);
+  }
+  function closeModal(){
+    modalOverlay.classList.remove("show");
+    modalOnSave = null;
+  }
+  modalCancel.addEventListener("click", closeModal);
+  modalOverlay.addEventListener("click", function(e){
+    if(e.target === modalOverlay) closeModal();
+  });
+  modalSave.addEventListener("click", function(){
+    var v = modalInput.value.trim();
+    var cb = modalOnSave;
+    closeModal();
+    if(cb) cb(v);
+  });
+  modalInput.addEventListener("keydown", function(e){
+    if(e.key === "Enter"){ e.preventDefault(); modalSave.click(); }
+  });
+
+  var toastTimer = null;
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add("show");
+    if(toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove("show"); }, 2600);
+  }
+
+  // ================= UTIL =================
+  function pad(n){ return n < 10 ? "0" + n : "" + n; }
+
+  function formatTsNow(){
+    var d = new Date();
+    return d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(d.getDate()) + " " +
+           pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
+  }
+
+  function formatJamTampil(ts){
+    // ts formatnya "yyyy-mm-dd hh:nn:ss"
+    if(!ts) return "";
+    var t = ts.split(" ")[1] || "";
+    return t.slice(0,5);
+  }
+
+  function escapeHtml(s){
+    var d = document.createElement("div");
+    d.textContent = s == null ? "" : s;
+    return d.innerHTML;
+  }
+
+  function saveContacts(){
+    localStorage.setItem(LS_CONTACTS, JSON.stringify(contacts));
+  }
+
+  // ================= SET NAMA =================
+  function showScreen(name){
+    screenName.style.display = name === "name" ? "flex" : "none";
+    screenList.style.display = name === "list" ? "flex" : "none";
+    screenList.style.flexDirection = name === "list" ? "column" : "";
+    screenChat.style.display = name === "chat" ? "flex" : "none";
+  }
+
+  btnSaveMyName.addEventListener("click", function(){
+    var v = inpMyName.value.trim();
+    if(v === ""){ inpMyName.focus(); return; }
+    myName = v;
+    localStorage.setItem(LS_NAME, myName);
+    showScreen("list");
+    renderRoomList();
+  });
+
+  btnChangeName.addEventListener("click", function(){
+    inpMyName.value = myName;
+    showScreen("name");
+  });
+
+  // ================= DAFTAR ROOM =================
+  function lastMessageForRoom(roomKey){
+    var keys = Object.keys(allMessages);
+    var last = null;
+    for(var i = 0; i < keys.length; i++){
+      var m = allMessages[keys[i]];
+      if(belongsToRoom(m, roomKey)){
+        if(!last || (m.ts || "") >= (last.ts || "")) last = m;
+      }
+    }
+    return last;
+  }
+
+  function belongsToRoom(m, roomKey){
+    if(roomKey === "ALL") return m.recipient === "ALL";
+    return (m.sender === myName && m.recipient === roomKey) ||
+           (m.sender === roomKey && m.recipient === myName);
+  }
+
+  function renderRoomList(){
+    // grup
+    roomGrup.innerHTML = "";
+    var lastGrup = lastMessageForRoom("ALL");
+    roomGrup.appendChild(buildRoomCard("ALL", "Grup (Semua)", "grup",
+      lastGrup ? (lastGrup.sender + ": " + lastGrup.msg) : "Belum ada pesan",
+      lastGrup ? formatJamTampil(lastGrup.ts) : ""));
+
+    // private
+    roomList.innerHTML = "";
+    if(contacts.length === 0){
+      var hint = document.createElement("div");
+      hint.className = "emptyHint";
+      hint.textContent = "Belum ada kontak. Tambah kontak buat mulai chat pribadi.";
+      roomList.appendChild(hint);
+    } else {
+      contacts.forEach(function(c){
+        var lastM = lastMessageForRoom(c);
+        roomList.appendChild(buildRoomCard(c, c, "priv",
+          lastM ? (lastM.sender === myName ? "Kamu: " : "") + lastM.msg : "Belum ada pesan",
+          lastM ? formatJamTampil(lastM.ts) : ""));
+      });
+    }
+  }
+
+  function buildRoomCard(roomKey, title, avatarClass, lastText, timeText){
+    var card = document.createElement("div");
+    card.className = "roomCard";
+
+    var av = document.createElement("div");
+    av.className = "roomAvatar " + avatarClass;
+    av.textContent = avatarClass === "grup" ? "G" : title.charAt(0).toUpperCase();
+
+    var info = document.createElement("div");
+    info.className = "roomInfo";
+    var rname = document.createElement("div");
+    rname.className = "rname";
+    rname.textContent = title;
+    var rlast = document.createElement("div");
+    rlast.className = "rlast";
+    rlast.textContent = lastText;
+    info.appendChild(rname);
+    info.appendChild(rlast);
+
+    var time = document.createElement("div");
+    time.className = "roomTime";
+    time.textContent = timeText;
+
+    card.appendChild(av);
+    card.appendChild(info);
+    card.appendChild(time);
+
+    card.addEventListener("click", function(){ openRoom(roomKey, title); });
+    return card;
+  }
+
+  btnAddContact.addEventListener("click", function(){
+    openModal(function(nama){
+      if(nama === "") return;
+      if(nama === myName){ showToast("Gak bisa nambahin nama sendiri."); return; }
+      if(contacts.indexOf(nama) !== -1){ showToast("Kontak sudah ada."); return; }
+      contacts.push(nama);
+      saveContacts();
+      renderRoomList();
+      showToast("Kontak \"" + nama + "\" ditambahkan.");
+    });
+  });
+
+  // ================= LAYAR CHAT =================
+  function openRoom(roomKey, title){
+    currentRoom = roomKey;
+    hdrChatTitle.textContent = title;
+    showScreen("chat");
+    renderChatMessages();
+    setTimeout(function(){ txtChatMsg.focus(); }, 200);
+  }
+
+  btnBackToList.addEventListener("click", function(){
+    currentRoom = null;
+    showScreen("list");
+    renderRoomList();
+  });
+
+  function renderChatMessages(){
+    if(currentRoom === null) return;
+    chatMessages.innerHTML = "";
+
+    var keys = Object.keys(allMessages).sort(); // push key Firebase = urut waktu
+    var any = false;
+    keys.forEach(function(k){
+      var m = allMessages[k];
+      if(!belongsToRoom(m, currentRoom)) return;
+      any = true;
+      appendBubble(m);
+    });
+
+    if(!any){
+      var hint = document.createElement("div");
+      hint.className = "emptyHint";
+      hint.textContent = "Belum ada pesan. Mulai chat sekarang.";
+      chatMessages.appendChild(hint);
+    }
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function appendBubble(m){
+    var isOwn = m.sender === myName;
+    var row = document.createElement("div");
+    row.className = "bubbleRow " + (isOwn ? "own" : "other");
+
+    var b = document.createElement("div");
+    b.className = "bubble";
+
+    var html = "";
+    if(!isOwn && currentRoom === "ALL"){
+      html += '<div class="bsender">' + escapeHtml(m.sender) + '</div>';
+    }
+    html += escapeHtml(m.msg).replace(/\n/g, "<br>");
+    html += '<div class="btime">' + escapeHtml(formatJamTampil(m.ts)) + '</div>';
+    b.innerHTML = html;
+
+    row.appendChild(b);
+    chatMessages.appendChild(row);
+  }
+
+  // ================= KIRIM PESAN =================
+  function kirimPesan(){
+    var teks = txtChatMsg.value.trim();
+    if(teks === "" || currentRoom === null) return;
+
+    var payload = {
+      ts: formatTsNow(),
+      sender: myName,
+      recipient: currentRoom,
+      msg: teks,
+      source: "phone",
+      synced: false
+    };
+
+    messagesRef.push(payload, function(err){
+      if(err){ showToast("Gagal kirim pesan. Cek koneksi internet."); }
+    });
+
+    txtChatMsg.value = "";
+    autoResizeTextarea();
+  }
+
+  btnSendChat.addEventListener("click", kirimPesan);
+  txtChatMsg.addEventListener("keydown", function(e){
+    if(e.key === "Enter" && !e.shiftKey){
+      e.preventDefault();
+      kirimPesan();
+    }
+  });
+  txtChatMsg.addEventListener("input", autoResizeTextarea);
+  function autoResizeTextarea(){
+    txtChatMsg.style.height = "auto";
+    txtChatMsg.style.height = Math.min(txtChatMsg.scrollHeight, 90) + "px";
+  }
+
+  // ================= REALTIME LISTENER =================
+  messagesRef.on("value", function(snap){
+    var newData = snap.val() || {};
+
+    if(knownKeys === null){
+      // load pertama kali: catat semua key yang udah ada, JANGAN notif riwayat lama
+      knownKeys = {};
+      Object.keys(newData).forEach(function(k){ knownKeys[k] = true; });
+    } else {
+      Object.keys(newData).forEach(function(k){
+        if(!knownKeys[k]){
+          knownKeys[k] = true;
+          var m = newData[k];
+          if(m && m.sender !== myName && (m.recipient === "ALL" || m.recipient === myName)){
+            notifyNewMessage(m);
+          }
+        }
+      });
+    }
+
+    allMessages = newData;
+    if(currentRoom === null){
+      if(screenList.style.display !== "none") renderRoomList();
+    } else {
+      renderChatMessages();
+    }
+  });
+
+  db.ref(".info/connected").on("value", function(snap){
+    var on = snap.val() === true;
+    connDot.className = on ? "on" : "off";
+    connDot2.className = on ? "on" : "off";
+  });
+
+  // ================= INIT =================
+  if(myName === ""){
+    showScreen("name");
+  } else {
+    showScreen("list");
+    renderRoomList();
+  }
+})();
+</script>
+</body>
+</html>
